@@ -40,7 +40,7 @@ local function _set_bookmarks(bookmarks)
     _sign_group.remove_signs()
     table.sort(bookmarks, function(a, b)
         if a.file ~= b.file then return a.file < b.file end
-        return a.lnum < b.lnum
+        return (a.lnum or 0) < (b.lnum or 0)
     end)
     for _, bm in ipairs(bookmarks) do
         _set_source_bookmark(bm.file, bm.lnum, bm.text)
@@ -158,7 +158,7 @@ function M.select_bookmark(wsdir)
 
     table.sort(details_list, function(a, b)
         if a.file ~= b.file then return a.file < b.file end
-        return a.lnum < b.lnum
+        return (a.lnum or 0) < (b.lnum or 0)
     end)
 
     local function format_path(details)

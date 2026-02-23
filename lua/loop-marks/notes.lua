@@ -51,8 +51,8 @@ end
 local function _set_notes(notes)
     _extmarks_group.remove_extmarks()
     table.sort(notes, function(a, b)
-        if a.file ~= b.file then return a.file < b.file end
-        return a.lnum < b.lnum
+        if a.file ~= b.file then return tostring(a.file) < tostring(b.file) end
+        return (a.lnum or 0) < (b.lnum or 0)
     end)
     for _, nd in ipairs(notes) do
         local file = vim.fn.fnamemodify(nd.file, ":p")
@@ -201,8 +201,8 @@ function M.select_note(wsdir)
     end
 
     table.sort(details_list, function(a, b)
-        if a.file ~= b.file then return a.file < b.file end
-        return a.lnum < b.lnum
+        if a.file ~= b.file then return tostring(a.file) < tostring(b.file) end
+        return (a.lnum or 0) < (b.lnum or 0)
     end)
 
     local cur_file, cur_lnum = uitools.get_current_file_and_line()
