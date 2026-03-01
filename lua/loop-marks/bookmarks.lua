@@ -191,16 +191,17 @@ function M.select_bookmark(wsdir)
     end
 
     selector.select({
-        prompt = "Bookmarks",
-        items = choices,
-        file_preview = true,
-        initial = initial,
-        callback = function(selected)
+            prompt = "Bookmarks",
+            items = choices,
+            file_preview = true,
+            initial = initial,
+        },
+        function(selected)
             if selected and selected.file then
                 uitools.smart_open_file(selected.file, selected.lnum)
             end
-        end,
-    })
+        end
+    )
 end
 
 function M.init()

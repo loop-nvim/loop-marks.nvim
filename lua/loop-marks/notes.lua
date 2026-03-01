@@ -223,16 +223,17 @@ function M.select_note(wsdir)
     end
 
     selector.select({
-        prompt = "Notes",
-        items = choices,
-        file_preview = true,
-        initial = initial,
-        callback = function(selected)
+            prompt = "Notes",
+            items = choices,
+            file_preview = true,
+            initial = initial,
+        },
+        function(selected)
             if selected and selected.file then
                 uitools.smart_open_file(selected.file, selected.lnum)
             end
-        end,
-    })
+        end
+    )
 end
 
 function M.init()
