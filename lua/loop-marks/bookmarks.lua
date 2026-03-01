@@ -40,7 +40,7 @@ local function _set_bookmarks(bookmarks)
     _sign_group.remove_signs()
     table.sort(bookmarks, function(a, b)
         if a.file ~= b.file then return a.file < b.file end
-        return a.lnum < b.lnum
+        return (a.lnum or 0) < (b.lnum or 0)
     end)
     for _, bm in ipairs(bookmarks) do
         _set_source_bookmark(bm.file, bm.lnum, bm.text)
@@ -156,6 +156,11 @@ function M.select_bookmark(wsdir)
         return
     end
 
+    table.sort(details_list, function(a, b)
+        if a.file ~= b.file then return a.file < b.file end
+        return (a.lnum or 0) < (b.lnum or 0)
+    end)
+
     local function format_path(details)
         local file = details.file
         if wsdir then
@@ -168,32 +173,35 @@ function M.select_bookmark(wsdir)
         return table.concat(parts, '')
     end
 
+    local cur_file, cur_lnum = uitools.get_current_file_and_line()
+
+    local initial
     local choices = {}
     for _, details in ipairs(details_list) do
         table.insert(choices, {
-            label            = details.text:gsub("\n", " "),
-            virt_text_chunks = { { format_path(details), "Comment" } },
-            file             = details.file,
-            lnum             = details.lnum,
-            data             = details,
+            label      = details.text:gsub("\n", " "),
+            virt_lines = { { { format_path(details), "Comment" } } },
+            file       = details.file,
+            lnum       = details.lnum,
+            data       = details,
         })
+        if not initial and cur_file == details.file and cur_lnum == details.lnum then
+            initial = #choices
+        end
     end
 
-    table.sort(choices, function(a, b)
-        if a.file ~= b.file then return a.file < b.file end
-        return a.lnum < b.lnum
-    end)
-
     selector.select({
-        prompt = "Bookmarks",
-        items = choices,
-        file_preview = true,
-        callback = function(selected)
+            prompt = "Bookmarks",
+            items = choices,
+            file_preview = true,
+            initial = initial,
+        },
+        function(selected)
             if selected and selected.file then
                 uitools.smart_open_file(selected.file, selected.lnum)
             end
-        end,
-    })
+        end
+    )
 end
 
 function M.init()

@@ -51,8 +51,8 @@ end
 local function _set_notes(notes)
     _extmarks_group.remove_extmarks()
     table.sort(notes, function(a, b)
-        if a.file ~= b.file then return a.file < b.file end
-        return a.lnum < b.lnum
+        if a.file ~= b.file then return tostring(a.file) < tostring(b.file) end
+        return (a.lnum or 0) < (b.lnum or 0)
     end)
     for _, nd in ipairs(notes) do
         local file = vim.fn.fnamemodify(nd.file, ":p")
@@ -200,32 +200,40 @@ function M.select_note(wsdir)
         return
     end
 
+    table.sort(details_list, function(a, b)
+        if a.file ~= b.file then return tostring(a.file) < tostring(b.file) end
+        return (a.lnum or 0) < (b.lnum or 0)
+    end)
+
+    local cur_file, cur_lnum = uitools.get_current_file_and_line()
+
+    local initial
     local choices = {}
     for _, details in ipairs(details_list) do
         table.insert(choices, {
-            label = details.text:gsub("\n", " "),
-            virt_text_chunks = {{format_path(details),"Comment"}},
-            file  = details.file,
-            lnum  = details.lnum,
-            data  = details,
+            label      = details.text:gsub("\n", " "),
+            virt_lines = { { { format_path(details), "Comment" } } },
+            file       = details.file,
+            lnum       = details.lnum,
+            data       = details,
         })
+        if not initial and cur_file == details.file and cur_lnum == details.lnum then
+            initial = #choices
+        end
     end
 
-    table.sort(choices, function(a, b)
-        if a.file ~= b.file then return a.file < b.file end
-        return a.lnum < b.lnum
-    end)
-
     selector.select({
-        prompt = "Notes",
-        items = choices,
-        file_preview = true,
-        callback = function(selected)
+            prompt = "Notes",
+            items = choices,
+            file_preview = true,
+            initial = initial,
+        },
+        function(selected)
             if selected and selected.file then
                 uitools.smart_open_file(selected.file, selected.lnum)
             end
-        end,
-    })
+        end
+    )
 end
 
 function M.init()
