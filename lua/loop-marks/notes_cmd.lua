@@ -10,7 +10,6 @@ local function _notes_commands(args)
     if #args == 0 then
         return {
             "set",
-            "name",
             "delete",
             "list",
             "clear_file",
