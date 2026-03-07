@@ -1,3 +1,14 @@
+> [!WARNING]
+> 🚧 **Work in Progress**
+>
+> This plugin is currently under active development.
+>
+> - APIs and configuration may change
+> - Breaking changes can occur without notice
+>
+> Use with caution until a stable release is announced.
+> Issues, suggestions, and contributions are welcome while the project evolves.
+
 # loop-marks.nvim
 
 Workspace bookmarks and notes for [loop.nvim](https://github.com/mbfoss/loop.nvim). Per-workspace marks and inline notes that persist with your Loop workspace.
