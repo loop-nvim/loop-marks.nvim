@@ -1,7 +1,7 @@
 local M             = {}
 local uitools       = require("loop.tools.uitools")
 local floatwin      = require("loop.tools.floatwin")
-local config        = require('loop-marks.config')
+local config        = require('loop-marks').config
 local extmarks      = require('loop.extmarks')
 local selector      = require("loop.tools.selector")
 
@@ -37,7 +37,7 @@ local function _set_source_note(file, lnum, text)
     local note = {
         text = text
     }
-    text = (" %s %s"):format(config.current.note_symbol, text or "Note")
+    text = (" %s %s"):format(config.note_symbol, text or "Note")
     _extmarks_group.set_file_extmark(id, file, lnum, 0, {
             virt_text     = { { text, "Todo" } },
             virt_text_pos = "eol",
@@ -240,9 +240,7 @@ function M.init()
     if _init_done then return end
     _init_done = true
 
-    assert(config.current)
-
-    _extmarks_group = extmarks.define_group("Notes", { priority = config.current.note_sign_priority })
+    _extmarks_group = extmarks.define_group("Notes", { priority = config.note_sign_priority })
     -- Highlight group (feel free to change link or define your own)
     local hl = "LoopMarksNote"
     vim.api.nvim_set_hl(0, hl, { link = "Todo" }) -- or "Special", "WarningMsg", etc.

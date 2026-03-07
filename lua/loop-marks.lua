@@ -1,30 +1,29 @@
--- lua/loop/init.lua
+-- IMPORTANT: keep this module light for lazy loading
+
 local M = {}
 
--- Dependencies
-local config = require("loop-marks.config")
+---@class loop-marks.Config
+---@field stack_levels_limit? number
+---@field mark_sign_priority? number
+---@field note_sign_priority? number
+---@field mark_symbol? string
+---@field note_symbol? string
 
------------------------------------------------------------
--- Defaults
------------------------------------------------------------
+local function _get_default_config()
+    ---@type loop-marks.Config
+    return {
+        mark_sign_priority = 50,
+        note_sign_priority = 50,
+        mark_symbol = "*",
+        note_symbol = "✎",
+    }
+end
 
 ---@type loop-marks.Config
-local DEFAULT_CONFIG = {
-    mark_sign_priority = 50,
-    note_sign_priority = 50,
-    mark_symbol = "*",
-    note_symbol = "✎",
-}
+M.config = _get_default_config()
 
 -----------------------------------------------------------
--- State
------------------------------------------------------------
-
-local setup_done = false
-local initialized = false
-
------------------------------------------------------------
--- Setup (user config only)
+-- Setup (user config)
 -----------------------------------------------------------
 
 ---@param opts loop-marks.Config?
@@ -33,29 +32,7 @@ function M.setup(opts)
         error("loop.nvim requires Neovim >= 0.10")
     end
 
-    config.current = vim.tbl_deep_extend("force", DEFAULT_CONFIG, opts or {})
-    setup_done = true
-
-    M.init()
-end
-
------------------------------------------------------------
--- Initialization (runs once)
------------------------------------------------------------
-
-function M.init()
-    if initialized then
-        return
-    end
-    initialized = true
-
-    -- Apply defaults if setup() was never called
-    if not setup_done then
-        config.current = DEFAULT_CONFIG
-    end
-
-    require('loop-marks.bookmarks').init()
-    require('loop-marks.notes').init()
+    M.config = vim.tbl_deep_extend("force", _get_default_config(), opts or {})
 end
 
 return M

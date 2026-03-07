@@ -1,10 +1,17 @@
 local bookmarks = require('loop-marks.bookmarks')
 local notes = require('loop-marks.notes')
 
+local _init_done = false
 ---@type loop.Extension
 local extension =
 {
     on_workspace_load = function(ext_data)
+        if not _init_done then
+            _init_done = true
+            require('loop-marks.bookmarks').init()
+            require('loop-marks.notes').init()
+        end
+
         bookmarks.set_bookmarks(ext_data.state.get("marks") or {})
         notes.set_notes(ext_data.state.get("notes") or {})
         ext_data.register_user_command("mark", require("loop-marks.bookmarks_cmd").get_cmd_provider(ext_data))

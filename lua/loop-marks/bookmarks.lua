@@ -1,7 +1,7 @@
 local M                   = {}
 local uitools             = require("loop.tools.uitools")
 local floatwin            = require("loop.tools.floatwin")
-local config              = require('loop-marks.config')
+local config              = require('loop-marks').config
 local loopsigns           = require('loop.signs')
 local selector            = require("loop.tools.selector")
 
@@ -9,6 +9,8 @@ local selector            = require("loop.tools.selector")
 ---@field file string
 ---@field lnum integer
 ---@field text string
+
+local _init_done          = false
 
 ---@type loop.signs.Group
 local _sign_group
@@ -205,14 +207,15 @@ function M.select_bookmark(wsdir)
 end
 
 function M.init()
-    if _sign_group then return end
+    if _init_done then return end
+    _init_done = true
+    assert(not _sign_group)
 
-    assert(config.current)
     local hl = "LoopmarksBookmarksSign"
     vim.api.nvim_set_hl(0, hl, { link = "Directory" })
 
-    _sign_group = loopsigns.define_group("bookmarks", { priority = config.current.mark_sign_priority })
-    _sign_group.define_sign(_bookmark_sign_name, config.current.mark_symbol, hl)
+    _sign_group = loopsigns.define_group("bookmarks", { priority = config.mark_sign_priority })
+    _sign_group.define_sign(_bookmark_sign_name, config.mark_symbol, hl)
 end
 
 return M
