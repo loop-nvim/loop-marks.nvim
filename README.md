@@ -16,7 +16,7 @@ Workspace bookmarks and notes for [loop.nvim](https://github.com/mbfoss/loop.nvi
 ## Requirements
 
 - **Neovim** ≥ 0.10  
-- **loop.nvim**
+- **[loop.nvim](https://github.com/mbfoss/loop.nvim)**
 
 ## Features
 
