@@ -11,12 +11,12 @@
 
 # loop-marks.nvim
 
-Workspace bookmarks and notes for [loop.nvim](https://github.com/mbfoss/loop.nvim). Per-workspace marks and inline notes that persist with your Loop workspace.
+Workspace bookmarks and notes for [loop.nvim](https://github.com/loop-nvim/loop.nvim). Per-workspace marks and inline notes that persist with your Loop workspace.
 
 ## Requirements
 
 - **Neovim** ≥ 0.10  
-- **[loop.nvim](https://github.com/mbfoss/loop.nvim)**
+- **[loop.nvim](https://github.com/loop-nvim/loop.nvim)**
 
 ## Features
 
@@ -31,8 +31,8 @@ Workspace bookmarks and notes for [loop.nvim](https://github.com/mbfoss/loop.nvi
 
 ```lua
 {
-    "mbfoss/loop-marks.nvim",
-    dependencies = { "mbfoss/loop.nvim" },
+    "loop-nvim/loop-marks.nvim",
+    dependencies = { "loop-nvim/loop.nvim" },
 }
 ```
 
