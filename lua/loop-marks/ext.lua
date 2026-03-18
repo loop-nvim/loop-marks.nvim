@@ -5,25 +5,26 @@ local _init_done = false
 ---@type loop.Extension
 local extension =
 {
-    on_workspace_load = function(ext_data)
+    on_workspace_load = function(ext_api)
         if not _init_done then
             _init_done = true
             require('loop-marks.bookmarks').init()
             require('loop-marks.notes').init()
         end
-
-        bookmarks.set_bookmarks(ext_data.state.get("marks") or {})
-        notes.set_notes(ext_data.state.get("notes") or {})
-        ext_data.register_user_command("mark", require("loop-marks.bookmarks_cmd").get_cmd_provider(ext_data))
-        ext_data.register_user_command("note", require("loop-marks.notes_cmd").get_cmd_provider(ext_data))
+        local state = ext_api.get_storage()
+        bookmarks.set_bookmarks(state.get("marks") or {})
+        notes.set_notes(state.get("notes") or {})
+        ext_api.register_user_command("mark", require("loop-marks.bookmarks_cmd").get_cmd_provider(ext_api))
+        ext_api.register_user_command("note", require("loop-marks.notes_cmd").get_cmd_provider(ext_api))
     end,
     on_workspace_unload = function(_)
         bookmarks.clear_all_bookmarks()
         notes.clear_all_notes()
     end,
-    on_state_will_save = function(ext_data)
-        ext_data.state.set("marks", bookmarks.get_bookmarks())
-        ext_data.state.set("notes", notes.get_notes())
+    on_state_will_save = function(ext_api)
+        local state = ext_api.get_storage()
+        state.set("marks", bookmarks.get_bookmarks())
+        state.set("notes", notes.get_notes())
     end,
 }
 return extension

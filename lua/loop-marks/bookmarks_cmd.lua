@@ -31,7 +31,7 @@ local function _do_command(args, opts, ws_dir)
     end
 end
 
----@param ext_data loop.ExtensionData
+---@param ext_data loop.ExtensionAPI
 function M.get_cmd_provider(ext_data)
     ---@type loop.UserCommandProvider
     return {
